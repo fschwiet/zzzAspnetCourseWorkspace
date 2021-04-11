@@ -10,3 +10,5 @@ _ReSharper.*
 *.user
 .vs
 packages
+
+api/database.db
