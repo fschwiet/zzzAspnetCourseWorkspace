@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using persistence;
 
 namespace api.Controllers
 {
@@ -28,6 +26,19 @@ namespace api.Controllers
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
             return await mediator.Send( new application.Activities.Details.Query(id));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateActivity(Activity activity)
+        {
+            return Ok(await mediator.Send(new application.Activities.Create.Command(activity)));
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditActivity(Guid id, Activity activity)
+        {
+            activity.Id = id;
+            return Ok(await mediator.Send( new application.Activities.Edit.Command(activity)));
         }
     }
 }
