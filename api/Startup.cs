@@ -47,6 +47,7 @@ namespace api
             });
 
             services.AddMediatR(typeof(application.Activities.List).Assembly);
+            services.AddAutoMapper(typeof(application.MappingProfiles).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
