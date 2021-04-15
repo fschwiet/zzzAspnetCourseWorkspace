@@ -12,3 +12,5 @@ _ReSharper.*
 packages
 
 api/database.db
+
+StudentAssets/
