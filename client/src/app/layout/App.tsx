@@ -8,14 +8,33 @@ import ActivitiesDashboard from '../../features/activities/dashboard/ActivitiesD
 function App() {
   let [activities, setActivities] = useState<Activity[]>([]);
   let [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
-  //let [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
+  let [editMode, setEditMode] = useState(false);
 
   function handleSelectActivity(id: string) {
+    setEditMode(false);
     setSelectedActivity(activities.find(x => x.id === id))
   }
 
   function handleCancelSelectActivity() {
+    setEditMode(false);
     setSelectedActivity(undefined);
+  }
+
+  function handleFormOpen(id?: string) {
+    id ? handleSelectActivity(id) : handleCancelSelectActivity();
+    setEditMode(true);
+  }
+
+  function handleFormClose() {
+    setEditMode(false);
+  }
+
+  function handleCreateOrEditActivity(activity: Activity) {
+    setActivities(activity.id ? [...activities.filter(x => x.id !== activity.id), activity]
+      : [...activities, activity]);
+
+    setEditMode(false);
+    setSelectedActivity(activity);
   }
 
   useEffect(() => {
@@ -27,12 +46,16 @@ function App() {
 
   return (
     <>
-      <NavBar/>
-      <Container style={{marginTop: '7em'}}>
-        <ActivitiesDashboard activities={activities} 
+      <NavBar openForm={handleFormOpen} />
+      <Container style={{ marginTop: '7em' }}>
+        <ActivitiesDashboard activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
-          cancelSelectActivity={handleCancelSelectActivity}/>
+          cancelSelectActivity={handleCancelSelectActivity}
+          editMode={editMode}
+          openForm={handleFormOpen}
+          closeForm={handleFormClose} 
+          createOrEdit={handleCreateOrEditActivity}/>
       </Container>
     </>
   );
