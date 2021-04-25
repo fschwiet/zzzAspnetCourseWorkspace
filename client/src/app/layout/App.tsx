@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
@@ -7,12 +6,14 @@ import ActivitiesDashboard from '../../features/activities/dashboard/ActivitiesD
 import {v4 as uuid} from 'uuid'
 import Agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
+import agent from '../api/agent';
 
 function App() {
   let [activities, setActivities] = useState<Activity[]>([]);
   let [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   let [editMode, setEditMode] = useState(false);
   let [loading, setLoading] = useState(true);
+  let [submitting, setSubmitting] = useState(false);
 
   function handleSelectActivity(id: string) {
     setEditMode(false);
@@ -34,15 +35,33 @@ function App() {
   }
 
   function handleCreateOrEditActivity(activity: Activity) {
-    setActivities(activity.id ? [...activities.filter(x => x.id !== activity.id), activity]
-      : [...activities, {...activity, id: uuid()}]);
+    setSubmitting(true);
 
-    setEditMode(false);
-    setSelectedActivity(activity);
+    if (activity.id) {
+      agent.Activities.update(activity).then(() => {
+        setActivities([...activities.filter(x => x.id !== activity.id), activity]);
+        setEditMode(false);
+        setSelectedActivity(activity);
+        setSubmitting(false);
+      });
+    } else
+    {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        setActivities([...activities, activity]);
+        setEditMode(false);
+        setSelectedActivity(activity);
+        setSubmitting(false);
+      });
+    }
   }
 
   function handleDeleteActivity(id: string) {
-    setActivities([...activities.filter(x => x.id !== id)]);
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(x => x.id !== id)]);
+      setSubmitting(false);
+    });
   }
 
   useEffect(() => {
@@ -66,7 +85,8 @@ function App() {
           openForm={handleFormOpen}
           closeForm={handleFormClose} 
           createOrEdit={handleCreateOrEditActivity}
-          deleteActivity={handleDeleteActivity}/>
+          deleteActivity={handleDeleteActivity}
+          submitting={submitting}/>
       </Container>
     </>
   );
