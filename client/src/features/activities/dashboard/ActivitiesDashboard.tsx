@@ -16,7 +16,7 @@ function ActivityDashboard() {
         <ActivityList />
       </Grid.Column>
       <Grid.Column width="6">
-        {activityStore.SelectedActivity &&
+        {activityStore.selectedActivity &&
           <ActivityDetails />
         }
         {activityStore.editMode && <ActivityForm

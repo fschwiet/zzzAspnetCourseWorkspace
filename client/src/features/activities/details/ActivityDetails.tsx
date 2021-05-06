@@ -7,7 +7,7 @@ function ActivityDetails() {
 
   var {activityStore} = useStore();
 
-  var activity = activityStore.SelectedActivity;
+  var activity = activityStore.selectedActivity;
   
   if (!activity) return <Card></Card>
 

@@ -7,7 +7,7 @@ function ActivityForm() {
 
   var {activityStore} = useStore();
 
-  const initialState = activityStore.SelectedActivity ?? {
+  const initialState = activityStore.selectedActivity ?? {
     id: '',
     title: '',
     category: '',
