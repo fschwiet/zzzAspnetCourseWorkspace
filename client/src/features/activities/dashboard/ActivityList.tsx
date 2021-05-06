@@ -17,7 +17,7 @@ function ActivityList() {
     <Segment>
       <Item.Group divided>
         {
-          Array.from(activityStore.activityRegistry.values(), (activity) => (
+          activityStore.activitiesByDate.map((activity) => (
             <Item key={activity.id}>
               <Item.Content>
                 <Item.Header as="a">{activity.title}</Item.Header>

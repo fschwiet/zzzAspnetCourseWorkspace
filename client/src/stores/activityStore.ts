@@ -22,6 +22,11 @@ export default class ActivityStore {
     */
   }
 
+  get activitiesByDate() {
+    return Array.from(this.activityRegistry.values()).sort(
+      (a,b) => Date.parse(b.date) - Date.parse(a.date));
+  }
+
   loadActivities = async () => {
     this.loadingInitial = true;
 
