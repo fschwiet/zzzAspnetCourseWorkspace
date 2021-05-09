@@ -1,12 +1,22 @@
 import { observer } from "mobx-react-lite";
-import React, { SyntheticEvent, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { useStore } from "../../../stores/store";
 
 function ActivityList() {
 
   const {activityStore} = useStore();
   var [target, setTarget] = useState<string>();
+  var [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    activityStore.loadActivities().then(() => setLoading(false));
+  }, [activityStore]);
+
+  if (loading) 
+    return <LoadingComponent content="Loading app"></LoadingComponent> 
 
   function handleDelete(e: SyntheticEvent<HTMLButtonElement>, id: string) {
     setTarget(e.currentTarget.name);
@@ -27,7 +37,7 @@ function ActivityList() {
                   <div>{activity.city}, {activity.venue}</div>
                 </Item.Description>
                 <Item.Extra>
-                <Button onClick={() => activityStore.setSelectedActivity(activity.id)} floated="right" content="View" color="blue" />
+                <Button as={Link} to={`/activities/${activity.id}`} floated="right" content="View" color="blue" />
                 <Button onClick={(e) => handleDelete(e, activity.id)} name={activity.id} loading={(target === activity.id) && activityStore.loading} floated="right" content="Delete" color="red" />
                   <Label basic content={activity.category} />
                 </Item.Extra>
