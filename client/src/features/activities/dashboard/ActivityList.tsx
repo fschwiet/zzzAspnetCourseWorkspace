@@ -12,7 +12,7 @@ function ActivityList() {
   var [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    activityStore.loadActivities().then(() => setLoading(false));
+    activityStore.ensureActivitiesLoaded().then(() => setLoading(false));
   }, [activityStore]);
 
   if (loading) 

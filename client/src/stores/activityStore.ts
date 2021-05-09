@@ -6,6 +6,7 @@ import {v4 as uuid} from 'uuid'
 export default class ActivityStore {
 
   activityRegistry = new Map<string, Activity>()
+  loadedAllActivities = false
   editMode = false;
   loading = false;
 
@@ -30,6 +31,13 @@ export default class ActivityStore {
       (a,b) => Date.parse(b.date) - Date.parse(a.date));
   }
 
+  ensureActivitiesLoaded = async () => {
+    if (this.loadedAllActivities) 
+      return;
+
+    await this.loadActivities()
+  }
+
   loadActivities = async () => {
     try
     {
@@ -37,6 +45,7 @@ export default class ActivityStore {
 
       runInAction(() => {
         activities.forEach(a => this.storeActivity(a));
+        this.loadedAllActivities = true
       })
     }
     catch(error) {
