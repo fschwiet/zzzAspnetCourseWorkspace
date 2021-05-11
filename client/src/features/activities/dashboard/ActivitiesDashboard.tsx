@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { Grid } from "semantic-ui-react";
 import ActivityList from "./ActivityList";
+import ActivityFilters from "./ActivityFilters";
 
 function ActivityDashboard() {
 
@@ -11,7 +12,7 @@ function ActivityDashboard() {
         <ActivityList />
       </Grid.Column>
       <Grid.Column width="6">
-        <h2>Activity filter</h2>
+        <ActivityFilters/>
       </Grid.Column>
     </Grid>
   );
