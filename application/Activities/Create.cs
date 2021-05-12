@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using application.Core;
 using domain;
 using FluentValidation;
 using MediatR;
@@ -9,7 +10,7 @@ namespace application.Activities
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Command(Activity activity)
             {
@@ -27,7 +28,7 @@ namespace application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext context;
 
@@ -36,13 +37,13 @@ namespace application.Activities
                 this.context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 context.Activities.Add(request.Activity);
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Unit.Value;
+                return Result.Success(Unit.Value);
             }
         }
     }

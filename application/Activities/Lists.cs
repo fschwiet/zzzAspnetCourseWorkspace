@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using application.Core;
 using domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +11,9 @@ namespace application.Activities
 {
     public class List
     {
-        public class Query : IRequest<List<Activity>> { }
+        public class Query : IRequest<Result<List<Activity>>> { }
 
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        public class Handler : IRequestHandler<Query, Result<List<Activity>>>
         {
             private readonly DataContext context;
 
@@ -21,9 +22,9 @@ namespace application.Activities
                 this.context = context;
             }
 
-            public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await context.Activities.ToListAsync(cancellationToken);
+                return Result.Success(await context.Activities.ToListAsync(cancellationToken));
             }
         }
     }

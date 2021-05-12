@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using application.Core;
 using AutoMapper;
 using domain;
 using FluentValidation;
@@ -10,7 +11,7 @@ namespace application.Activities
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Command(Activity activity)
             {
@@ -28,7 +29,7 @@ namespace application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext context;
             private readonly IMapper mapper;
@@ -39,15 +40,17 @@ namespace application.Activities
                 this.mapper = mapper;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await context.Activities.FindAsync(new object[] { request.Activity.Id }, cancellationToken);
 
+                if (activity == null) return null;
+                
                 mapper.Map(request.Activity, activity);
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Unit.Value;
+                return Result.Success(Unit.Value);
             }
         }
     }
