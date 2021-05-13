@@ -32,7 +32,6 @@ namespace application.Activities
             public async Task<Result<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var result = await context.Activities.FindAsync(new object[] { request.Id}, cancellationToken);
-            
                 return Result.Success(result); 
             }
         }
