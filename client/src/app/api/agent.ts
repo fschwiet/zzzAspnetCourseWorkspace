@@ -1,7 +1,9 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import { toast } from 'react-toastify';
+import { routedHistory } from '../..';
 import { Activity } from '../models/activity';
 
-axios.defaults.baseURL = "https://localhost:5001/api";
+axios.defaults.baseURL = 'https://localhost:5001/api';
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -10,13 +12,18 @@ const sleep = (delay: number) => {
 }
 
 axios.interceptors.response.use(async response => {
-  try {
-    await sleep(2000);
-    return response;
-  } catch (error) {
-    console.log(error);
-    return await Promise.reject(error);
+  await sleep(2000);
+  return response;
+}, (error : AxiosError) => {
+  const {data, status} = error.response!;
+
+  if (status == 404) {
+    routedHistory.push('not-found');
   }
+
+  toast.error(`${status} - ${JSON.stringify(data)}`);
+  
+  return Promise.reject(error);
 });
 
 const responseBody = <T> (response: AxiosResponse<T>) => response.data;
