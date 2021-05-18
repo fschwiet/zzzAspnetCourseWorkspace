@@ -14,7 +14,7 @@ function NavBar() {
                 </Menu.Item>
                 <Menu.Item name="Activities" as={NavLink} to="/activities"/>
                 <Menu.Item name="Errors" as={NavLink} to="/errors"/>
-                <Menu.Item name="Errors" as={NavLink} to="/errors"/>
+                <Menu.Item name="Swagger" href="http://localhost:5000/swagger/index.html"/>
                 <Menu.Item>
                     <Button positive content="Create Activity" as={NavLink} to="/createActivity"/>
                 </Menu.Item>
