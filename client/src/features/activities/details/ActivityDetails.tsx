@@ -9,6 +9,7 @@ import ActivityDetailHeader from "./ActivityDetailHeader";
 import ActivityDetailInfo from "./ActivityDetailInfo";
 import ActivityDetailChat from "./ActivityDetailChat";
 import ActivityDetailSidebar from "./ActivityDetailSidebar";
+import { format } from "date-fns";
 
 function ActivityDetails() {
 
@@ -48,7 +49,7 @@ function ActivityDetails() {
         <Card.Content>
           <Card.Header>{activity.title}</Card.Header>
           <Card.Meta>
-            <span>{activity.date}</span>
+            <span>{format(activity.date, 'dd MMM yyyy h:mm aa')}</span>
           </Card.Meta>
           <Card.Description>
             {activity.description}
