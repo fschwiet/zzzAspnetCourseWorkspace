@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using api.Middleware;
+using api.Services;
+using domain;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,12 +30,13 @@ namespace api
             this.config = config;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddFluentValidation(config => {
+            ConfigureIdentityServces(services);
+
+            services.AddControllers().AddFluentValidation(config =>
+            {
                 config.RegisterValidatorsFromAssemblyContaining<application.Activities.Create>();
             });
 
@@ -42,16 +45,31 @@ namespace api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "api", Version = "v1" });
             });
 
-            services.AddDbContext<DataContext>(opt => {
+            services.AddDbContext<DataContext>(opt =>
+            {
                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddCors(opts => {
+            services.AddCors(opts =>
+            {
                 opts.AddPolicy("CorsPolicy", policy => policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000"));
             });
 
             services.AddMediatR(typeof(application.Activities.List).Assembly);
             services.AddAutoMapper(typeof(application.MappingProfiles).Assembly);
+        }
+
+        private void ConfigureIdentityServces(IServiceCollection services)
+        {
+            services.AddIdentityCore<AppUser>(opt => {
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<DataContext>()
+            .AddSignInManager<SignInManager<AppUser>>();
+
+            services.AddAuthentication();
+            services.AddScoped<TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

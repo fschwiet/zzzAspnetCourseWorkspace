@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +26,7 @@ namespace api
             {
                 var dataContext = scope.ServiceProvider.GetService<DataContext>();
                 await dataContext.Database.MigrateAsync();
-                await Seed.SeedData(dataContext);
+                await Seed.SeedData(dataContext, scope.ServiceProvider.GetService<UserManager<AppUser>>());
             }
             catch (Exception e)
             {
