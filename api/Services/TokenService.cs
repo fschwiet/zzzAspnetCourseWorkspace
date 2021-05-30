@@ -10,6 +10,13 @@ namespace api.Services
 {
     public class TokenService
     {
+        private readonly TokenKeyService tokenKey;
+
+        public TokenService(TokenKeyService tokenKey)
+        {
+            this.tokenKey = tokenKey;
+        }
+
         public string GetToken(AppUser user)
         {
             var claims = new List<Claim>() {
@@ -18,8 +25,7 @@ namespace api.Services
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Super Secret Key"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(tokenKey.Value, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
