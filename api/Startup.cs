@@ -34,12 +34,13 @@ namespace api
             this.config = config;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureIdentityServces(services);
 
             services.AddControllers(opt => {
+                // observation: a bad authorization header is sufficient to reach the controllers,
+                // still need to check ControllerBase.User
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddFluentValidation(opt =>
