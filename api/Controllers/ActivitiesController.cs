@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using domain;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -27,7 +26,7 @@ namespace api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Activity>> GetActivity(Guid id, CancellationToken ct)
         {
-            return AsResponse(await mediator.Send( new application.Activities.Details.Query(id), ct));
+            return AsResponse(await mediator.Send(new application.Activities.Details.Query(id), ct));
         }
 
         [HttpPost]
@@ -35,7 +34,7 @@ namespace api.Controllers
         {
             return AsResponse(await mediator.Send(new application.Activities.Create.Command(activity), ct));
         }
-        
+
         [HttpPut("{id}")]
         public async Task<ActionResult<Unit>> EditActivity(Guid id, Activity activity, CancellationToken ct)
         {
