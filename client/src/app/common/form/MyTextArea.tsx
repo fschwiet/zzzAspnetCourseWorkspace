@@ -13,7 +13,7 @@ export default function MyTextArea(props: Props) {
   return (
     <Form.Field error={meta.touched && !!meta.error}>
       <label>{props.label}</label>
-      <textarea {...field} {...props}/>
+      <textarea {...field} {...props} />
       {meta.touched && meta.error && <Label color='red'>{meta.error}</Label>}
     </Form.Field>
   )
