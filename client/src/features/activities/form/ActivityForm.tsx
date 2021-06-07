@@ -59,7 +59,6 @@ function ActivityForm() {
     return <LoadingComponent content="Loading activity"></LoadingComponent>
 
   function handleFormSubmit(activity: Activity) {
-    console.log(activity);
     activityStore.createOrEditActivity(activity).then(id => {
       history.push(`/activities/${id}`)
     });
@@ -72,7 +71,7 @@ function ActivityForm() {
     <Segment clearing>
       <Header content='Activity Details' sub color='teal' />
       <Formik initialValues={activity} onSubmit={handleFormSubmit} validationSchema={validationSchema} enableReinitialize>
-        {({ handleSubmit, isValid, isSubmitting, dirty }) => (
+        {({ isValid, isSubmitting, dirty }) => (
           <Form className='ui form' autoComplete='off'>
             <MyTextInput placeholder="Title" name="title" />
             <MyTextArea placeholder="Description" name="description" rows={3} />

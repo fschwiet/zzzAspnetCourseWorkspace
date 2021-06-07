@@ -3,10 +3,12 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { Container, Header, Segment, Image, Button } from "semantic-ui-react"
 import { useStore } from "../../stores/store"
+import LoginForm from "../users/LoginForm"
+import RegisterForm from "../users/RegisterForm"
 
 export default observer(function HomePage() {
 
-  const { userStore } = useStore();
+  const { userStore, modalStore } = useStore();
 
   return (
     <>
@@ -25,7 +27,8 @@ export default observer(function HomePage() {
             ) : (
               <>
                 <Header as='h2' inverted content='Welcome to Reactivities' />
-                <Button as={Link} to='/login' size='huge' inverted content='Login' />
+                <Button onClick={() => modalStore.open(<LoginForm onDone={modalStore.close} />)} size='huge' inverted content='Login' />
+                <Button onClick={() => modalStore.open(<RegisterForm onDone={modalStore.close} />)} size='huge' inverted content='Register' />
               </>
             )
           }

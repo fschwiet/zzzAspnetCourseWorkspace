@@ -47,12 +47,14 @@ namespace api.Controllers
             // hmm, string comparison could already be case insensitive depending on how your db is setup
             if (await userManager.Users.AnyAsync(u => u.Email == register.Email))
             {
-                return BadRequest("Email not available.");
+                ModelState.AddModelError("email", "Email address not available.");
+                return ValidationProblem();
             }
 
             if (await userManager.Users.AnyAsync(u => u.UserName == register.Username))
             {
-                return BadRequest("Username not available.");
+                ModelState.AddModelError("username", "Username is not available.");
+                return ValidationProblem();
             }
 
             var user = new AppUser() {

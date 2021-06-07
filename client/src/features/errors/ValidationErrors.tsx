@@ -15,5 +15,14 @@ export default function ValidationErrors({ errors }: Props) {
       </Message.List>}
     </Message>
   )
+}
 
+export function ValidationError(props: { error: string | null | undefined }) {
+  return (
+    <Message error>
+      {props.error && <Message.List>
+        <Message.Item>{props.error}</Message.Item>
+      </Message.List>}
+    </Message>
+  )
 }

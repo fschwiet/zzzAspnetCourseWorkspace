@@ -14,6 +14,17 @@ export default class UserStore {
     return !!this.user;
   }
 
+  getUser = async () => {
+    try {
+      const user = await agent.Account.current();
+      console.log(user)
+
+      runInAction(() => this.user = user);
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   login = async (creds: UserFormValues) => {
     try {
       const user = await agent.Account.login(creds)
@@ -32,14 +43,16 @@ export default class UserStore {
     this.user = null;
   }
 
-  getUser = async () => {
+  register = async (creds: UserFormValues) => {
     try {
-      const user = await agent.Account.current();
-      console.log(user)
+      const user = await agent.Account.register(creds)
 
-      runInAction(() => this.user = user);
-    } catch (err) {
-      console.log(err)
+      runInAction(() => {
+        store.commonStore.setToken(user.token);
+        this.user = user
+      })
+    } catch (error) {
+      throw error;  
     }
   }
 }
