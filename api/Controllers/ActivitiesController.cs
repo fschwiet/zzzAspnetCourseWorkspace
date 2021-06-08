@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using application.Activities;
 using domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken ct)
+        public async Task<ActionResult<List<ActivityDto>>> GetActivities(CancellationToken ct)
         {
             return AsResponse(await mediator.Send(new application.Activities.List.Query(), ct));
         }
