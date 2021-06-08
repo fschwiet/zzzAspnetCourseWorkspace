@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using api.Middleware;
 using api.Services;
+using application.Interfaces;
 using domain;
 using FluentValidation.AspNetCore;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +67,7 @@ namespace api
 
             services.AddMediatR(typeof(application.Activities.List).Assembly);
             services.AddAutoMapper(typeof(application.MappingProfiles).Assembly);
+            services.AddScoped<IUserAccessor, UserAccessor>();
         }
 
         private void ConfigureIdentityServces(IServiceCollection services)

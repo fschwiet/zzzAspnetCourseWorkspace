@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{6
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain", "domain\domain.csproj", "{35A74BFF-2083-4A16-AD5D-A56EE0770E95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{5BF55DE0-DB33-4513-901E-F8B37178E0E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{35A74BFF-2083-4A16-AD5D-A56EE0770E95}.Release|x64.Build.0 = Release|Any CPU
 		{35A74BFF-2083-4A16-AD5D-A56EE0770E95}.Release|x86.ActiveCfg = Release|Any CPU
 		{35A74BFF-2083-4A16-AD5D-A56EE0770E95}.Release|x86.Build.0 = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|x64.Build.0 = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Debug|x86.Build.0 = Debug|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|x64.ActiveCfg = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|x64.Build.0 = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BF55DE0-DB33-4513-901E-F8B37178E0E3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
