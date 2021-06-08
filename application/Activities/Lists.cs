@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using application.Core;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +29,10 @@ namespace application.Activities
             public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var activities = await context.Activities
-                    .Include(a => a.Attendees)
-                    .ThenInclude(a => a.AppUser)
+                    .ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 
-                var activityDTOs = mapper.Map<List<ActivityDto>>(activities);
-
-                return Result.Success(activityDTOs);
+                return Result.Success(activities);
             }
         }
     }

@@ -25,7 +25,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> GetActivity(Guid id, CancellationToken ct)
+        public async Task<ActionResult<ActivityDto>> GetActivity(Guid id, CancellationToken ct)
         {
             return AsResponse(await mediator.Send(new application.Activities.Details.Query(id), ct));
         }
