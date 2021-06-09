@@ -13,7 +13,8 @@ namespace application.Activities
         public string Category { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
-
+        public bool IsCancelled { get; set; }
+        
         public string HostUsername { get; set; }
         public ICollection<Profile> Attendees { get; set; }
     }

@@ -48,5 +48,11 @@ namespace api.Controllers
         {
             return AsResponse(await mediator.Send(new application.Activities.Delete.Command(id), ct));
         }
+
+        [HttpPost("{id}/toggle-attendance")]
+        public async Task<ActionResult<Unit>> ToggleAttendance(Guid id, CancellationToken ct)
+        {
+            return AsResponse(await mediator.Send(new application.Activities.UpdateAttendance.Command(id), ct));
+        }
     }
 }
