@@ -40,6 +40,13 @@ namespace api
         {
             ConfigureIdentityServces(services);
 
+            services.AddAuthorization(opt => {
+                opt.AddPolicy("IsActivityHost", config => {
+                    config.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+
             services.AddControllers(opt => {
                 // observation: a bad authorization header is sufficient to reach the controllers,
                 // still need to check ControllerBase.User

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using application.Activities;
 using domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -37,6 +38,7 @@ namespace api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "IsActivityHost")]
         public async Task<ActionResult<Unit>> EditActivity(Guid id, Activity activity, CancellationToken ct)
         {
             activity.Id = id;
@@ -44,6 +46,7 @@ namespace api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "IsActivityHost")]
         public async Task<ActionResult<Unit>> DeleteActivity(Guid id, CancellationToken ct)
         {
             return AsResponse(await mediator.Send(new application.Activities.Delete.Command(id), ct));
