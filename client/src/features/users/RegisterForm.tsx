@@ -1,7 +1,7 @@
 import { Form, Formik, FormikHelpers } from 'formik'
 import { observer } from 'mobx-react-lite';
 import React from 'react'
-import { Button, Header, Label } from 'semantic-ui-react'
+import { Button, Header } from 'semantic-ui-react'
 import { routedHistory } from '../..';
 import MyTextInput from '../../app/common/form/MyTextInput'
 import { useStore } from '../../stores/store';
