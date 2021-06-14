@@ -85,9 +85,9 @@ namespace api.Controllers
         {
             return new UserDto() {
                 DisplayName = user.DisplayName,
-                Image = "/assets/user.png",
+                Image = null,
                 Token = tokenService.GetToken(user),
-                Username = user.DisplayName
+                Username = user.UserName
             };
         }
     }
