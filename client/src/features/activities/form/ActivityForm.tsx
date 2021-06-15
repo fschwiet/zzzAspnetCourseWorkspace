@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Activity, ActivityFormFields } from "../../../app/models/activity";
+import { ActivityFormFields } from "../../../app/models/activity";
 import { useStore } from "../../../stores/store";
 import * as Yup from 'yup'
 import MyTextInput from "../../../app/common/form/MyTextInput";

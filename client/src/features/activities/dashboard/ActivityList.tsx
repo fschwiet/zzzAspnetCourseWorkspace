@@ -15,7 +15,7 @@ function ActivityList() {
   }, [activityStore]);
 
   if (loading)
-    return <LoadingComponent content="Loading activities..."></LoadingComponent>
+    return <LoadingComponent content="Loading activities..."/>
 
   return (
     <>

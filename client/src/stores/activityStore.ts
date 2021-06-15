@@ -91,7 +91,7 @@ export default class ActivityStore {
 
     if (activity.id) {
       try {
-        var activityFromServer = await Agent.Activities.update(activity);
+        const activityFromServer = await Agent.Activities.update(activity);
 
         runInAction(() => {
           this.storeActivity(activityFromServer);
@@ -108,7 +108,7 @@ export default class ActivityStore {
     else {
       activity.id = uuid();
       try {
-        var activityFromServer = await Agent.Activities.create(activity);
+        const activityFromServer = await Agent.Activities.create(activity);
         runInAction(() => {
           this.storeActivity(activityFromServer);
         });
