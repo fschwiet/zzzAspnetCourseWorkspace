@@ -6,7 +6,7 @@ interface Props {
   name: string;
 }
 export default function MyErrorMessage(props: Props) {
-  const [field, meta] = useField(props.name);
+  const [, meta] = useField(props.name);
   return (
     <Form.Field error={meta.touched && !!meta.error}>
       {meta.touched && meta.error && <Label color='red'>{meta.error}</Label>}

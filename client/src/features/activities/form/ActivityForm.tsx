@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { Button, Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Activity } from "../../../app/models/activity";
+import { Activity, ActivityFormFields } from "../../../app/models/activity";
 import { useStore } from "../../../stores/store";
 import * as Yup from 'yup'
 import MyTextInput from "../../../app/common/form/MyTextInput";
@@ -18,15 +18,14 @@ function ActivityForm() {
   var { id } = useParams<{ id: string }>();
   var { activityStore } = useStore();
 
-  const [activity, setActivity] = useState<Activity>({
+  const [activity, setActivity] = useState<ActivityFormFields>({
     id: '',
     title: '',
     category: '',
     description: '',
     date: null!,
     city: '',
-    venue: '',
-    isCancelled: false
+    venue: ''
   });
 
   const validationSchema = Yup.object({
@@ -58,7 +57,7 @@ function ActivityForm() {
   if (loading)
     return <LoadingComponent content="Loading activity"></LoadingComponent>
 
-  function handleFormSubmit(activity: Activity) {
+  function handleFormSubmit(activity: ActivityFormFields) {
     activityStore.createOrEditActivity(activity).then(id => {
       history.push(`/activities/${id}`)
     });
@@ -88,7 +87,7 @@ function ActivityForm() {
             <MyTextInput placeholder="Venue" name="venue" />
             <Button
               disabled={isSubmitting || !isValid || !dirty}
-              loading={activityStore.loading}
+              loading={isSubmitting}
               floated="right"
               positive type="submit" content="Submit" />
             <Button as={Link} to={activity.id ? `/activities/${activity.id}` : '/activities'} floated="right" type="button" content="Cancel" />

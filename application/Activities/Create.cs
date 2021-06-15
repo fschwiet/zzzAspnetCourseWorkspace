@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using application.Core;
 using application.Interfaces;
+using AutoMapper;
 using domain;
 using FluentValidation;
 using MediatR;
@@ -13,14 +14,14 @@ namespace application.Activities
 {
     public class Create
     {
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<Result<ActivityDto>>
         {
-            public Command(Activity activity)
+            public Command(ActivityFormFieldsDto activity)
             {
                 Activity = activity;
             }
 
-            public Activity Activity { get; }
+            public ActivityFormFieldsDto Activity { get; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -31,34 +32,38 @@ namespace application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, Result<ActivityDto>>
         {
             private readonly DataContext context;
             private readonly IUserAccessor userAccessor;
+            private readonly IMapper mapper;
 
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
             {
+                this.mapper = mapper;
                 this.context = context;
                 this.userAccessor = userAccessor;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<ActivityDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var user = await context.Users.FirstAsync(u => u.UserName == userAccessor.GetUsername());
+                var activity = mapper.Map<Activity>(request.Activity);
 
-                var attendee = new ActivityAttendee() {
+                var attendee = new ActivityAttendee()
+                {
                     AppUser = user,
-                    Activity = request.Activity,
+                    Activity = activity,
                     IsHost = true
                 };
 
-                request.Activity.Attendees.Add(attendee);
-                
-                context.Activities.Add(request.Activity);
+                activity.Attendees.Add(attendee);
+
+                context.Activities.Add(activity);
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Result.Success(Unit.Value);
+                return Result.Success(mapper.Map<ActivityDto>(activity));
             }
         }
     }

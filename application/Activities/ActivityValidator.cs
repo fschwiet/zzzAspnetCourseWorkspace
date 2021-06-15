@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace application.Activities
 {
-    public class ActivityValidator : AbstractValidator<Activity>
+    public class ActivityValidator : AbstractValidator<ActivityFormFieldsDto>
     {
         public ActivityValidator()
         {

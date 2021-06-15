@@ -9,6 +9,7 @@ namespace application
     {
         public MappingProfiles()
         {
+            CreateMap<ActivityFormFieldsDto, Activity>();
             CreateMap<Activity, Activity>();
 
             CreateMap<Activity, ActivityDto>()

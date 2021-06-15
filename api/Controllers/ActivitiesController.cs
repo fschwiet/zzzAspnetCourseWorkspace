@@ -32,14 +32,14 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> CreateActivity(Activity activity, CancellationToken ct)
+        public async Task<ActionResult<ActivityDto>> CreateActivity(ActivityFormFieldsDto activity, CancellationToken ct)
         {
             return AsResponse(await mediator.Send(new application.Activities.Create.Command(activity), ct));
         }
 
         [HttpPut("{id}")]
         [Authorize(Policy = "IsActivityHost")]
-        public async Task<ActionResult<Unit>> EditActivity(Guid id, Activity activity, CancellationToken ct)
+        public async Task<ActionResult<ActivityDto>> EditActivity(Guid id, ActivityFormFieldsDto activity, CancellationToken ct)
         {
             activity.Id = id;
             return AsResponse(await mediator.Send(new application.Activities.Edit.Command(activity), ct));
@@ -53,7 +53,7 @@ namespace api.Controllers
         }
 
         [HttpPost("{id}/toggle-attendance")]
-        public async Task<ActionResult<Unit>> ToggleAttendance(Guid id, CancellationToken ct)
+        public async Task<ActionResult<ActivityDto>> ToggleAttendance(Guid id, CancellationToken ct)
         {
             return AsResponse(await mediator.Send(new application.Activities.UpdateAttendance.Command(id), ct));
         }

@@ -2,23 +2,25 @@ using System.Threading;
 using System.Threading.Tasks;
 using application.Core;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using persistence;
 
 namespace application.Activities
 {
     public class Edit
     {
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<Result<ActivityDto>>
         {
-            public Command(Activity activity)
+            public Command(ActivityFormFieldsDto activity)
             {
                 Activity = activity;
             }
 
-            public Activity Activity { get; }
+            public ActivityFormFieldsDto Activity { get; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -29,7 +31,7 @@ namespace application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, Result<ActivityDto>>
         {
             private readonly DataContext context;
             private readonly IMapper mapper;
@@ -40,7 +42,7 @@ namespace application.Activities
                 this.mapper = mapper;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<ActivityDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await context.Activities.FindAsync(new object[] { request.Activity.Id }, cancellationToken);
 
@@ -50,7 +52,11 @@ namespace application.Activities
 
                 await context.SaveChangesAsync(cancellationToken);
 
-                return Result.Success(Unit.Value);
+                var result = await context.Activities
+                    .ProjectTo<ActivityDto>(mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(a => a.Id == request.Activity.Id);
+
+                return Result.Success(result);
             }
         }
     }

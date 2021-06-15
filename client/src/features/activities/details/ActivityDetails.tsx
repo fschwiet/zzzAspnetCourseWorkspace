@@ -4,7 +4,6 @@ import { Button, Card, Grid, Image } from "semantic-ui-react";
 import { useStore } from "../../../stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Link, useParams } from "react-router-dom";
-import { Activity } from "../../../app/models/activity";
 import ActivityDetailHeader from "./ActivityDetailHeader";
 import ActivityDetailInfo from "./ActivityDetailInfo";
 import ActivityDetailChat from "./ActivityDetailChat";
@@ -15,7 +14,6 @@ function ActivityDetails() {
 
   var { id } = useParams<{ id: string }>();
   var { activityStore } = useStore();
-  var [activity, setActivity] = useState<Activity>();
   var [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,9 +21,11 @@ function ActivityDetails() {
       setLoading(false);
     }
     else {
-      activityStore.loadActivity(id).then(setActivity).then(() => setLoading(false));
+      activityStore.loadActivity(id).then(() => setLoading(false));
     }
   }, [id, activityStore]);
+
+  var activity = activityStore.activityRegistry.get(id);
 
   if (loading || !activity)
     return <LoadingComponent content="Loading activity"></LoadingComponent>
@@ -39,7 +39,7 @@ function ActivityDetails() {
           <ActivityDetailChat />
         </Grid.Column>
         <Grid.Column width={6}>
-          <ActivityDetailSidebar />
+          <ActivityDetailSidebar activity={activity}/>
         </Grid.Column>
 
       </Grid>

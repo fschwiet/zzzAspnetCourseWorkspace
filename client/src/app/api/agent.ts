@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify';
 import { routedHistory } from '../..';
 import { store } from '../../stores/store';
-import { Activity } from '../models/activity';
+import { Activity, ActivityFormFields } from '../models/activity';
 import { User, UserFormValues } from '../models/user';
 
 axios.defaults.baseURL = 'https://localhost:5001/api';
@@ -70,9 +70,10 @@ const requests = {
 const Activities = {
   list: () => requests.get<Activity[]>("/activities"),
   details: (id: string) => requests.get<Activity>(`/activities/${id}`),
-  create: (activity: Activity) => requests.post("/activities", activity),
-  update: (activity: Activity) => requests.put(`/activities/${activity.id}`, activity),
-  delete: (id: string) => requests.delete(`/activities/${id}`)
+  create: (activity: ActivityFormFields) => requests.post<Activity>("/activities", activity),
+  update: (activity: ActivityFormFields) => requests.put<Activity>(`/activities/${activity.id}`, activity),
+  delete: (id: string) => requests.delete(`/activities/${id}`),
+  toggleAttendance: (id: string) => requests.post<Activity>(`/activities/${id}/toggle-attendance`, {}),
 }
 
 const Account = {

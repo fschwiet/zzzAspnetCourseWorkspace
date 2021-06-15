@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using application.Core;
 using application.Interfaces;
+using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using persistence;
@@ -12,7 +13,7 @@ namespace application.Activities
 {
     public class UpdateAttendance
     {
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<Result<ActivityDto>>
         {
             public Command(Guid id)
             {
@@ -22,18 +23,20 @@ namespace application.Activities
             public Guid ActivityId { get; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, Result<ActivityDto>>
         {
             private readonly DataContext dataContext;
             private readonly IUserAccessor userAccessor;
+            private readonly IMapper mapper;
 
-            public Handler(DataContext dataContext, IUserAccessor userAccessor)
+            public Handler(DataContext dataContext, IUserAccessor userAccessor, IMapper mapper)
             {
                 this.dataContext = dataContext;
                 this.userAccessor = userAccessor;
+                this.mapper = mapper;
             }
 
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<ActivityDto>> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = await dataContext.Activities
                     .Include(a => a.Attendees).ThenInclude(a => a.AppUser)
@@ -74,9 +77,7 @@ namespace application.Activities
 
                 var result = await dataContext.SaveChangesAsync();
 
-                return (result > 0)
-                    ? Result.Success<Unit>(new Unit())
-                    : Result.Failure<Unit>("No rows were changed in the database.");
+                return Result.Success(mapper.Map<ActivityDto>(activity));
             }
         }
     }
