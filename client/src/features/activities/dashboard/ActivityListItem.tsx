@@ -25,11 +25,11 @@ function ActivityListItem({ activity }: Props) {
       <Segment.Group>
         <Segment>
           {activity.isCancelled &&
-            <Label attached='top' color='red' content='Cancelled' style={{textAlign: 'center'}}>Cancelled</Label>
+            <Label attached='top' color='red' style={{textAlign: 'center'}}>Cancelled</Label>
           }
           <Item.Group>
             <Item>
-              <Item.Image size='tiny' circular src='/assets/user.png' />
+              <Item.Image size='tiny' style={{marginBottom: 3}} circular src='/assets/user.png' />
               <Item.Content>
                 <Item.Header as={Link} to={`/activities/${activity.id}`}>{activity.title}</Item.Header>
                 <Item.Description>Hosted by {activity.host.displayName}</Item.Description>
