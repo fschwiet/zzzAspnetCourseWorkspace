@@ -32,6 +32,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "postbuild": "run-script-os",
+    "postbuild:win32": "(IF EXIST ..\\API\\wwwroot rmdir /S /Q ..\\API\\wwwroot) & move /Y build ..\\API\\wwwroot",
+    "postbuild:default": "mv build ../API/wwwroot",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -58,6 +61,7 @@
     "@types/react-datepicker": "^3.1.8",
     "@types/react-router-dom": "^5.1.7",
     "@types/uuid": "^8.3.0",
-    "@types/yup": "^0.29.11"
+    "@types/yup": "^0.29.11",
+    "run-script-os": "^1.1.6"
   }
 }

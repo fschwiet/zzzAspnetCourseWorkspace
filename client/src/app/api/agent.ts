@@ -5,7 +5,7 @@ import { store } from '../../stores/store';
 import { Activity, ActivityFormFields } from '../models/activity';
 import { User, UserFormValues } from '../models/user';
 
-axios.defaults.baseURL = 'https://localhost:5001/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -20,10 +20,15 @@ axios.interceptors.request.use(request => {
   return request;
 });
 
-axios.interceptors.response.use(async response => {
-  await sleep(800);
-  return response;
-}, (error: AxiosError) => {
+if (process.env.NODE_ENV === 'development') {
+  axios.interceptors.response.use(async response => {
+    await sleep(800);
+
+    return response;
+  });
+}
+
+axios.interceptors.response.use(undefined, (error: AxiosError) => {
   const { data, status, config } = error.response!;
 
   if (status === 500) {

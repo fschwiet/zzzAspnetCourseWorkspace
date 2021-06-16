@@ -119,6 +119,9 @@ namespace api
 
             app.UseRouting();
 
+            app.UseDefaultFiles(); // loads index file given just a path
+            app.UseStaticFiles();  // allows files to be loaded from wwwroot
+
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
@@ -127,6 +130,7 @@ namespace api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
