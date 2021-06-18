@@ -20,23 +20,6 @@ namespace api
         {
             var host = CreateHostBuilder(args).Build();
             
-            using var scope = host.Services.CreateScope();
-
-            try
-            {
-                var dataContext = scope.ServiceProvider.GetService<DataContext>();
-                await dataContext.Database.MigrateAsync();
-                await Seed.SeedData(dataContext, scope.ServiceProvider.GetService<UserManager<AppUser>>());
-            }
-            catch (Exception e)
-            {
-                var logger = scope.ServiceProvider.GetService<Logger<Program>>();
-
-                logger.LogCritical("Error running migrations: " + e);
-
-                throw;
-            }
-            
             await host.RunAsync();
         }
 
