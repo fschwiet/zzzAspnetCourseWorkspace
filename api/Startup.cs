@@ -38,16 +38,19 @@ namespace api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            ConfigureIdentityServces(services); 
+            ConfigureIdentityServces(services);
 
-            services.AddAuthorization(opt => {
-                opt.AddPolicy("IsActivityHost", config => {
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", config =>
+                {
                     config.Requirements.Add(new IsHostRequirement());
                 });
             });
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
-            services.AddControllers(opt => {
+            services.AddControllers(opt =>
+            {
                 // observation: a bad authorization header is sufficient to reach the controllers,
                 // still need to check ControllerBase.User
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -64,7 +67,7 @@ namespace api
 
             services.AddDbContext<DataContext>(opt =>
             {
-                opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                opt.UseNpgsql(GetDatabaseConnectionString());
             });
 
             services.AddTransient<IStartupFilter, MigrationStartupFilter<DataContext>>();
@@ -79,9 +82,45 @@ namespace api
             services.AddScoped<IUserAccessor, UserAccessor>();
         }
 
+        private string GetDatabaseConnectionString()
+        {
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            string connStr;
+
+            // Depending on if in development or production, use either Heroku-provided
+            // connection string, or development connection string from env var.
+            if (env == "Development")
+            {
+                // Use connection string from file.
+                connStr = config.GetConnectionString("DefaultConnection");
+            }
+            else
+            {
+                // Use connection string provided at runtime by Heroku.
+                var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                // Parse connection URL to connection string for Npgsql
+                connUrl = connUrl.Replace("postgres://", string.Empty);
+                var pgUserPass = connUrl.Split("@")[0];
+                var pgHostPortDb = connUrl.Split("@")[1];
+                var pgHostPort = pgHostPortDb.Split("/")[0];
+                var pgDb = pgHostPortDb.Split("/")[1];
+                var pgUser = pgUserPass.Split(":")[0];
+                var pgPass = pgUserPass.Split(":")[1];
+                var pgHost = pgHostPort.Split(":")[0];
+                var pgPort = pgHostPort.Split(":")[1];
+
+                connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}; SSL Mode=Require; Trust Server Certificate=true";
+            }
+
+            return connStr;
+        }
+
         private void ConfigureIdentityServces(IServiceCollection services)
         {
-            services.AddIdentityCore<AppUser>(opt => {
+            services.AddIdentityCore<AppUser>(opt =>
+            {
                 opt.User.RequireUniqueEmail = true;
                 opt.Password.RequireNonAlphanumeric = true;
                 opt.Password.RequireDigit = true;
@@ -92,8 +131,10 @@ namespace api
             .AddSignInManager<SignInManager<AppUser>>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt => {
-                    opt.TokenValidationParameters = new TokenValidationParameters() {
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters()
+                    {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new TokenKeyService(config).Value,
                         ValidateIssuer = false,
