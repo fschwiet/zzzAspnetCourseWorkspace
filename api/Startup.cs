@@ -151,6 +151,20 @@ namespace api
         {
             app.UseMiddleware<ExceptionMiddleware>();
 
+            app.UseXContentTypeOptions();
+            app.UseReferrerPolicy(opt => opt.NoReferrer());
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+            app.UseXfo(opt => opt.Deny());
+            app.UseCsp(opt => opt.
+                BlockAllMixedContent()
+                .StyleSources(s => s.CustomSources("fonts.googleapis.com").Self())
+                .FontSources(s => s.CustomSources("fonts.gstatic.com", "data:").Self())
+                .FormActions(s => s.Self())
+                .FrameAncestors(s => s.Self())
+                .ImageSources(s => s.Self())
+                .ScriptSources(s => s.CustomSources("sha256-txL7Ctv452DqyiGllvZsIUx+ckAtvwFJUaXjfdPBLeg=").Self())
+            );
+
             if (env.IsDevelopment())
             {
                 //app.UseDeveloperExceptionPage();
