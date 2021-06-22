@@ -171,6 +171,14 @@ namespace api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1"));
             }
+            else
+            {
+                app.Use(async (context, next) => {
+                    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
+                    await next.Invoke();
+                });
+                //app.UseHsts(opts => opts.MaxAge(365));
+            }
 
             app.UseHttpsRedirection();
 
